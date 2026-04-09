@@ -1,70 +1,154 @@
-# Offside
+<div align="center">
 
-**Category:** Network Forensics · Email Analysis
-**Difficulty:** Easy
-**Points:** 400
-**Platform:** Cyberium Arena — Hack the Grid
+# ░▒▓ OFFSIDE ▓▒░
 
----
+<br>
 
-## Scenario
+[![Category](https://img.shields.io/badge/CATEGORY-FORENSICS-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
+[![Technique](https://img.shields.io/badge/TECHNIQUE-EMAIL_ANALYSIS-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
+[![Difficulty](https://img.shields.io/badge/DIFFICULTY-EASY-16a34a?style=for-the-badge)](https://cyberium.io)
+[![Points](https://img.shields.io/badge/POINTS-400-6d28d9?style=for-the-badge)](https://cyberium.io)
+[![Platform](https://img.shields.io/badge/PLATFORM-CYBERIUM_ARENA-0f172a?style=for-the-badge&logo=docker)](https://cyberium.io)
 
-An analyst at CyberiumGrid Utilities Corp. received a suspicious email — a ticket confirmation that arrived from an unrecognized sender. Before deleting it, they forwarded it to the security team for analysis.
+<br>
 
-Initial review suggests the email is more than it appears. Threat actors have been known to hide authentication tokens and exfiltrated data inside email headers — fields that standard mail clients never display to the user.
-
-Your mission: examine the raw email and find what's hidden inside.
-
----
-
-## Missions
-
-| # | Objective |
-|---|-----------|
-| 1 | Identify the name of the custom HTTP/email header containing the hidden data |
-| 2 | Identify the encoding scheme used to encode the value in that header |
-| 3 | Decode the value and retrieve the flag |
+</div>
 
 ---
 
-## Getting Started
+## ╔══════════════════════════════╗
+## ║   THREAT INTELLIGENCE FILE   ║
+## ╚══════════════════════════════╝
 
-Launch your challenge instance on **Cyberium Arena**.
+> **CLASSIFICATION: RESTRICTED — AUTHORIZED ANALYSTS ONLY**
+>
+> An analyst at CyberiumGrid Utilities Corp. received an unsolicited email —
+> a ticket confirmation that arrived from an unrecognized external address.
+> Something about it felt wrong. Before deleting it, she forwarded it to the
+> security team with a single note: *"Don't think this is what it looks like."*
+>
+> She was right.
+>
+> Standard mail clients showed nothing unusual. A clean-looking confirmation email.
+> Ticket number, event details, a polite sign-off. Completely benign on the surface.
+>
+> But threat actors don't hide in the body of emails anymore. They hide in the headers —
+> fields your mail client never shows you, fields that get logged and forgotten.
+> Somewhere in the raw RFC 5322 structure of this message is a hidden payload
+> that was never meant to be found.
+>
+> **Open the raw file. Read between the lines — literally.**
+
+---
+
+## ╔══════════════════════════════╗
+## ║   MISSION OBJECTIVES         ║
+## ╚══════════════════════════════╝
+
+| MISSION | OBJECTIVE | STATUS |
+|:-------:|-----------|:------:|
+| `M-01` | Identify the **name of the custom header** containing the hidden data | `LOCKED` |
+| `M-02` | Identify the **encoding scheme** used to encode the value in that header | `LOCKED` |
+| `M-03` | Decode the value and **retrieve the flag** | `LOCKED` |
+
+> Complete missions in sequence. Mission 3 cannot be submitted without completing 1 and 2.
+
+---
+
+## ╔══════════════════════════════╗
+## ║   RECOVERED EVIDENCE         ║
+## ╚══════════════════════════════╝
+
+**Launch your instance on [Cyberium Arena](https://cyberium.io).**
 
 Download the email file from the challenge interface:
 
-| File | Description |
-|------|-------------|
-| `ticket_confirmation.eml` | Raw email file in RFC 5322 format |
+```
+┌──────────────────────────────┬────────────────────────────────────────────┐
+│ FILE                         │ DESCRIPTION                                │
+├──────────────────────────────┼────────────────────────────────────────────┤
+│ ticket_confirmation.eml      │ Raw email file in RFC 5322 format          │
+└──────────────────────────────┴────────────────────────────────────────────┘
+```
 
-Open the file in a **text editor** — not an email client. You need to see the raw headers, not the rendered email.
-
----
-
-## Tools That May Help
-
-- Any plain text editor (`nano`, `vim`, VS Code, Notepad++)
-- Command line tools: `cat`, `strings`, `grep`
-- A base64 decoder (`base64 -d` on Linux, or any online decoder)
+> **Critical:** Open this file in a **plain text editor** — not an email client.
+> You need the raw headers. An email client will render the visible body and
+> hide everything that matters. Use `cat`, `nano`, `vim`, VS Code, or Notepad++.
 
 ---
 
-## Things to Think About
+## ╔══════════════════════════════╗
+## ║   RECOMMENDED TOOLKIT        ║
+## ╚══════════════════════════════╝
 
-- Standard email clients hide custom headers from users — look for fields that start with `X-`
-- Email headers are plain text and appear at the top of the `.eml` file before the message body
-- Common encoding schemes used to carry binary data in text-based formats include base64
+```
+▸  Plain text editor (nano, vim, VS Code, Notepad++)
+▸  cat / strings / grep — command-line inspection
+▸  base64 -d (Linux) or any online decoder
+```
+
+[![Forensics](https://img.shields.io/badge/TOOL-TEXT_EDITOR_+_BASE64-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
 
 ---
 
-## Flag Format
+## ╔══════════════════════════════╗
+## ║   ANALYST NOTES              ║
+## ╚══════════════════════════════╝
+
+<details>
+<summary><strong>▶ Hint 1 — Where do you look in the raw email?</strong></summary>
+
+<br>
+
+Email headers appear at the top of the `.eml` file, before the message body. Standard headers include `From`, `To`, `Subject`, `Date`, and `Message-ID`. Custom headers that don't belong to the RFC standard often start with `X-`.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 2 — What encoding scheme is commonly used in email headers?</strong></summary>
+
+<br>
+
+Email is a text-based protocol. When binary or arbitrary data needs to be embedded, it's typically encoded using a scheme that outputs only printable ASCII characters. One encoding scheme is ubiquitous in this context.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 3 — How do you decode it?</strong></summary>
+
+<br>
+
+On Linux: `echo "ENCODED_VALUE" | base64 -d`
+On any OS: paste the value into an online base64 decoder.
+The decoded output will contain the flag.
+
+</details>
+
+---
+
+## ╔══════════════════════════════╗
+## ║   FLAG FORMAT                ║
+## ╚══════════════════════════════╝
+
+<div align="center">
 
 ```
 CTF{...}
 ```
 
-Submit the decoded flag on the Cyberium Arena platform under Mission 3.
+*The flag is the decoded value of the hidden custom header.*
+*Submit under Mission 3 on the Cyberium Arena platform.*
+
+</div>
 
 ---
 
-*Part of the Cyberium Hack the Grid challenge collection · [Back to Hub](../README.md)*
+<div align="center">
+
+*Part of the Cyberium Hack the Grid challenge collection*
+<br>
+[← Back to Hub](../README.md)
+
+**CyberSentinel-sys · 2026**
+
+</div>

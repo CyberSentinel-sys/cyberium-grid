@@ -1,70 +1,150 @@
-# Cold Wire
+<div align="center">
 
-**Category:** Cryptography · XOR Cipher
-**Difficulty:** Easy
-**Points:** 400
-**Platform:** Cyberium Arena — Hack the Grid
+# ░▒▓ COLD WIRE ▓▒░
 
----
+<br>
 
-## Scenario
+[![Category](https://img.shields.io/badge/CATEGORY-CRYPTOGRAPHY-0891b2?style=for-the-badge&logo=gnupg)](https://cyberium.io)
+[![Technique](https://img.shields.io/badge/TECHNIQUE-XOR_CIPHER-0891b2?style=for-the-badge&logo=gnupg)](https://cyberium.io)
+[![Difficulty](https://img.shields.io/badge/DIFFICULTY-EASY-16a34a?style=for-the-badge)](https://cyberium.io)
+[![Points](https://img.shields.io/badge/POINTS-400-6d28d9?style=for-the-badge)](https://cyberium.io)
+[![Platform](https://img.shields.io/badge/PLATFORM-CYBERIUM_ARENA-0f172a?style=for-the-badge&logo=docker)](https://cyberium.io)
 
-Grid incident responders recovered two files from an attacker's workstation after a breach at CyberiumGrid Utilities Corp. One file is an encrypted transmission — a classified shutdown command that was intercepted in transit. The second is a partial encryption tool recovered alongside it, but the key constant was wiped before it could be retrieved.
+<br>
 
-The encryption is simple — a single-byte XOR cipher. The key is somewhere in the noise. Your job is to find it and recover the original message.
-
----
-
-## Missions
-
-| # | Objective |
-|---|-----------|
-| 1 | Identify the cipher algorithm used to encrypt the transmission |
-| 2 | Identify the numeric value of the encryption key (decimal) |
-| 3 | Decrypt the transmission and retrieve the flag |
+</div>
 
 ---
 
-## Getting Started
+## ╔══════════════════════════════╗
+## ║   THREAT INTELLIGENCE FILE   ║
+## ╚══════════════════════════════╝
 
-Launch your challenge instance on **Cyberium Arena**.
+> **CLASSIFICATION: RESTRICTED — AUTHORIZED ANALYSTS ONLY**
+>
+> Grid incident responders executed a rapid seizure of an attacker's workstation
+> following a breach at CyberiumGrid Utilities Corp. Two files were recovered before
+> the drive could be wiped.
+>
+> The first: an encrypted binary transmission — a classified grid shutdown command
+> that was intercepted mid-transit and scrambled before delivery.
+>
+> The second: a partial encryption tool. The key constant was zeroed out — deliberately
+> erased in the final seconds before seizure. Someone knew we were coming.
+>
+> The cipher is elementary. A single byte. Somewhere between 0 and 255.
+> The key is in the noise. The message is in the dark.
+> **Find the key. Recover the transmission. Extract what was meant to stay buried.**
+
+---
+
+## ╔══════════════════════════════╗
+## ║   MISSION OBJECTIVES         ║
+## ╚══════════════════════════════╝
+
+| MISSION | OBJECTIVE | STATUS |
+|:-------:|-----------|:------:|
+| `M-01` | Identify the **cipher algorithm** used to encrypt the transmission | `LOCKED` |
+| `M-02` | Determine the **numeric value of the encryption key** (decimal) | `LOCKED` |
+| `M-03` | Decrypt the transmission and **retrieve the flag** | `LOCKED` |
+
+> Complete missions in sequence. Mission 3 cannot be submitted without completing 1 and 2.
+
+---
+
+## ╔══════════════════════════════╗
+## ║   RECOVERED EVIDENCE         ║
+## ╚══════════════════════════════╝
+
+**Launch your instance on [Cyberium Arena](https://cyberium.io).**
 
 Download both files from the challenge interface:
 
-| File | Description |
-|------|-------------|
-| `transmission.enc` | The encrypted transmission (binary) |
-| `intercepted_tool.py` | Recovered encryption utility — key placeholder set to `0x00` |
+```
+┌──────────────────────┬──────────────────────────────────────────────────┐
+│ FILE                 │ DESCRIPTION                                      │
+├──────────────────────┼──────────────────────────────────────────────────┤
+│ transmission.enc     │ Encrypted binary transmission — the target       │
+│ intercepted_tool.py  │ Recovered encryption utility — key set to 0x00  │
+└──────────────────────┴──────────────────────────────────────────────────┘
+```
 
-Your goal is to determine the correct key and use the tool to decrypt the transmission.
-
----
-
-## Tools That May Help
-
-- Python 3 (built-in, no dependencies)
-- A hex editor (e.g., `xxd`, `hexedit`, HxD)
-- Basic understanding of XOR properties
+> `intercepted_tool.py` is also available in this repository for reference.
+> Determine the correct key and use the tool to decrypt `transmission.enc`.
+> The tool accepts two arguments: `<input_file> <output_file>`
 
 ---
 
-## Things to Think About
+## ╔══════════════════════════════╗
+## ║   RECOMMENDED TOOLKIT        ║
+## ╚══════════════════════════════╝
 
-- XOR encryption with a single byte key has a limited keyspace — how many possible keys exist?
-- The decrypted plaintext should be readable ASCII text — what does that tell you about how to validate a candidate key?
-- You can modify the `intercepted_tool.py` to test different key values
-- The tool takes two arguments: `<input_file> <output_file>`
+```
+▸  Python 3 — no external dependencies required
+▸  xxd or hexedit — inspect raw bytes in the encrypted file
+▸  A text editor — to modify the key constant in intercepted_tool.py
+```
+
+[![Python](https://img.shields.io/badge/TOOL-PYTHON_3-0891b2?style=for-the-badge&logo=python)](https://python.org)
 
 ---
 
-## Flag Format
+## ╔══════════════════════════════╗
+## ║   ANALYST NOTES              ║
+## ╚══════════════════════════════╝
+
+<details>
+<summary><strong>▶ Hint 1 — How large is the keyspace?</strong></summary>
+
+<br>
+
+A single-byte XOR key has a very limited range of possible values. Exactly 256 candidates. That's a small enough space to test systematically.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 2 — How do you know when you've found the right key?</strong></summary>
+
+<br>
+
+A correctly decrypted transmission should produce readable ASCII text — human-readable content with recognizable characters. Invalid keys will produce garbage bytes. Look for a result that makes sense as text.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 3 — How do you test each candidate key?</strong></summary>
+
+<br>
+
+Modify the key constant in `intercepted_tool.py` and run it on `transmission.enc`. Try different values. When the output looks like readable text containing the flag format `CTF{...}`, you've found it.
+
+</details>
+
+---
+
+## ╔══════════════════════════════╗
+## ║   FLAG FORMAT                ║
+## ╚══════════════════════════════╝
+
+<div align="center">
 
 ```
 CTF{...}
 ```
 
-The flag is embedded in the decrypted plaintext. Submit it on the Cyberium Arena platform under Mission 3.
+*The flag is embedded in the decrypted plaintext transmission.*
+*Submit under Mission 3 on the Cyberium Arena platform.*
+
+</div>
 
 ---
 
-*Part of the Cyberium Hack the Grid challenge collection · [Back to Hub](../README.md)*
+<div align="center">
+
+*Part of the Cyberium Hack the Grid challenge collection*
+<br>
+[← Back to Hub](../README.md)
+
+**CyberSentinel-sys · 2026**
+
+</div>

@@ -1,72 +1,152 @@
-# Log Sweep
+<div align="center">
 
-**Category:** Forensics · Log Analysis
-**Difficulty:** Easy
-**Points:** 400
-**Platform:** Cyberium Arena — Hack the Grid
+# ░▒▓ LOG SWEEP ▓▒░
 
----
+<br>
 
-## Scenario
+[![Category](https://img.shields.io/badge/CATEGORY-FORENSICS-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
+[![Technique](https://img.shields.io/badge/TECHNIQUE-LOG_ANALYSIS-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
+[![Difficulty](https://img.shields.io/badge/DIFFICULTY-EASY-16a34a?style=for-the-badge)](https://cyberium.io)
+[![Points](https://img.shields.io/badge/POINTS-400-6d28d9?style=for-the-badge)](https://cyberium.io)
+[![Platform](https://img.shields.io/badge/PLATFORM-CYBERIUM_ARENA-0f172a?style=for-the-badge&logo=docker)](https://cyberium.io)
 
-Following a security alert at CyberiumGrid Utilities Corp., the SOC team pulled the web server access logs from the affected node. At first glance, the log looks routine — hundreds of internal API calls from known grid systems.
+<br>
 
-But something is hiding in plain sight. One entry doesn't belong. And it's carrying a payload that was never meant to be seen.
-
-Your mission: find the anomaly, decode the hidden data, and extract the flag.
-
----
-
-## Missions
-
-| # | Objective |
-|---|-----------|
-| 1 | Identify the IP address of the suspicious/attacker request |
-| 2 | Identify the field within that request that contains encoded data, and the encoding scheme used |
-| 3 | Decode the value and retrieve the flag |
+</div>
 
 ---
 
-## Getting Started
+## ╔══════════════════════════════╗
+## ║   THREAT INTELLIGENCE FILE   ║
+## ╚══════════════════════════════╝
 
-Launch your challenge instance on **Cyberium Arena**.
+> **CLASSIFICATION: RESTRICTED — AUTHORIZED ANALYSTS ONLY**
+>
+> The SOC team at CyberiumGrid Utilities Corp. triggered an alert at 02:17 local time.
+> Something moved through the grid node's web server that shouldn't have.
+>
+> By 02:19, the access logs had been pulled and handed to forensics.
+> At first pass — nothing. Hundreds of internal API calls, all from known grid systems.
+> Routine. Procedural. Boring.
+>
+> At second pass — one entry doesn't match. One IP that has no business being in this log.
+> And in that entry, buried in a field that nobody ever reads, something is encoded.
+> Something that was never meant to be seen by human eyes.
+>
+> The attacker used the server's own logging infrastructure to carry a payload out in the open.
+> Hidden in plain sight. Right there in the log file that the SOC was already reading.
+>
+> **Find the anomaly. Identify the field. Decode what's inside.**
+
+---
+
+## ╔══════════════════════════════╗
+## ║   MISSION OBJECTIVES         ║
+## ╚══════════════════════════════╝
+
+| MISSION | OBJECTIVE | STATUS |
+|:-------:|-----------|:------:|
+| `M-01` | Identify the **IP address** of the suspicious attacker request | `LOCKED` |
+| `M-02` | Identify the **log field** containing encoded data and the **encoding scheme** used | `LOCKED` |
+| `M-03` | Decode the value and **retrieve the flag** | `LOCKED` |
+
+> Complete missions in sequence. Mission 3 cannot be submitted without completing 1 and 2.
+
+---
+
+## ╔══════════════════════════════╗
+## ║   RECOVERED EVIDENCE         ║
+## ╚══════════════════════════════╝
+
+**Launch your instance on [Cyberium Arena](https://cyberium.io).**
 
 Download the log file from the challenge interface:
 
-| File | Description |
-|------|-------------|
-| `grid_access.log` | Web server access log — Apache Combined Log Format |
+```
+┌────────────────────┬──────────────────────────────────────────────────────┐
+│ FILE               │ DESCRIPTION                                          │
+├────────────────────┼──────────────────────────────────────────────────────┤
+│ grid_access.log    │ Web server access log — Apache Combined Log Format   │
+│                    │ Approximately 100 entries. One is not like the others.│
+└────────────────────┴──────────────────────────────────────────────────────┘
+```
 
-Open the file and read through it. The log is approximately 100 lines. Most traffic is legitimate — look for what doesn't fit.
-
----
-
-## Tools That May Help
-
-- Any plain text editor
-- Command line tools: `grep`, `sort`, `uniq`, `cat`
-- A base64 decoder (`base64 -d` on Linux, or any online tool)
-- Spreadsheet or log viewer for easier reading
+> Open the file and read it carefully. Most traffic is legitimate — look for what doesn't fit.
+> Each log entry records: `IP · Timestamp · Method + Path · Status · Size · Referrer · User-Agent`
 
 ---
 
-## Things to Think About
+## ╔══════════════════════════════╗
+## ║   RECOMMENDED TOOLKIT        ║
+## ╚══════════════════════════════╝
 
-- Legitimate internal traffic comes from known internal IP ranges — anything outside that range is suspicious
-- Web server logs record many fields per request: IP, timestamp, path, status code, size, referrer, and **User-Agent**
-- Attackers sometimes hide data in fields that are logged but rarely inspected
-- Once you spot the suspicious entry, look carefully at every field — one of them contains encoded data
+```
+▸  Any plain text editor or terminal pager (less, more)
+▸  grep / sort / uniq — filter and isolate anomalies
+▸  base64 -d (Linux) or any online decoder
+▸  Spreadsheet or log viewer for structured reading
+```
+
+[![Forensics](https://img.shields.io/badge/TOOL-GREP_+_BASE64-059669?style=for-the-badge&logo=microsoftazure)](https://cyberium.io)
 
 ---
 
-## Flag Format
+## ╔══════════════════════════════╗
+## ║   ANALYST NOTES              ║
+## ╚══════════════════════════════╝
+
+<details>
+<summary><strong>▶ Hint 1 — How do you find the suspicious entry?</strong></summary>
+
+<br>
+
+Legitimate internal traffic originates from known internal IP ranges (e.g., `10.x.x.x`, `192.168.x.x`). Any request from an IP address outside those ranges is suspicious. Look for the outlier.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 2 — Which field contains the encoded payload?</strong></summary>
+
+<br>
+
+Apache Combined Log Format records a `User-Agent` string for every request — the identifier a browser or tool sends with each request. This field is logged but rarely inspected by defenders. It's an ideal hiding place for encoded data. Examine every field of the suspicious entry carefully.
+
+</details>
+
+<details>
+<summary><strong>▶ Hint 3 — How do you decode it?</strong></summary>
+
+<br>
+
+Once you've isolated the encoded value from the suspicious field, identify the encoding scheme from its character set and format. Then decode it using `base64 -d` on Linux or an online tool. The decoded output contains the flag.
+
+</details>
+
+---
+
+## ╔══════════════════════════════╗
+## ║   FLAG FORMAT                ║
+## ╚══════════════════════════════╝
+
+<div align="center">
 
 ```
 CTF{...}
 ```
 
-Submit the decoded flag on the Cyberium Arena platform under Mission 3.
+*The flag is the decoded content of the hidden field in the anomalous log entry.*
+*Submit under Mission 3 on the Cyberium Arena platform.*
+
+</div>
 
 ---
 
-*Part of the Cyberium Hack the Grid challenge collection · [Back to Hub](../README.md)*
+<div align="center">
+
+*Part of the Cyberium Hack the Grid challenge collection*
+<br>
+[← Back to Hub](../README.md)
+
+**CyberSentinel-sys · 2026**
+
+</div>
