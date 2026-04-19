@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package orhashield.events.v1;
+
+option go_package = "github.com/orhashield/dpi-engine/pkg/events";
+
+import "google/protobuf/timestamp.proto";
+
+enum Protocol {
+  PROTOCOL_UNSPECIFIED = 0;
+  PROTOCOL_MODBUS_TCP = 1;
+  PROTOCOL_DNP3 = 2;
+  PROTOCOL_ENIP_CIP = 3;
+  PROTOCOL_BACNET_IP = 4;
+  PROTOCOL_OPC_UA = 5;
+  PROTOCOL_S7COMM = 6;
+  PROTOCOL_PROFINET = 7;
+  PROTOCOL_IEC61850_MMS = 8;
+  PROTOCOL_IEC61850_GOOSE = 9;
+}
+
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  SEVERITY_INFO = 1;
+  SEVERITY_LOW = 2;
+  SEVERITY_MEDIUM = 3;
+  SEVERITY_HIGH = 4;
+  SEVERITY_CRITICAL = 5;
+}
+
+message OTEvent {
+  string event_id = 1;
+  google.protobuf.Timestamp ts = 2;
+  string sensor_id = 3;
+  string src_ip = 4;
+  string dst_ip = 5;
+  uint32 src_port = 6;
+  uint32 dst_port = 7;
+  Protocol protocol = 8;
+  bytes raw_payload = 9;
+
+  oneof parsed {
+    ModbusEvent modbus = 10;
+    DNP3Event dnp3 = 11;
+    ENIPEvent enip = 12;
+    BACnetEvent bacnet = 13;
+  }
+
+  AssetFingerprint fingerprint = 20;
+  Severity severity = 21;
+  repeated string tags = 22;
+  repeated AnomalyFlag anomalies = 23;
+}
+
+message ModbusEvent {
+  uint32 transaction_id = 1;
+  uint32 unit_id = 2;
+  uint32 function_code = 3;
+  bytes data = 4;
+  bool is_exception = 5;
+  uint32 exception_code = 6;
+  bool is_write = 7;
+  uint32 start_address = 8;
+  repeated uint32 values = 9;
+}
+
+message DNP3Event {
+  uint32 src_address = 1;
+  uint32 dst_address = 2;
+  uint32 function_code = 3;
+  bool is_unsolicited = 4;
+  bytes application_data = 5;
+  bool is_broadcast = 6;
+}
+
+message ENIPEvent {
+  uint32 command = 1;
+  uint32 session_handle = 2;
+  bytes encapsulation_data = 3;
+  uint32 cip_service = 4;
+  string cip_class_name = 5;
+  uint32 cip_instance = 6;
+}
+
+message BACnetEvent {
+  uint32 object_type = 1;
+  uint32 object_instance = 2;
+  uint32 property_id = 3;
+  bytes value = 4;
+  uint32 pdu_type = 5;
+}
+
+message AssetFingerprint {
+  string vendor = 1;
+  string model = 2;
+  string firmware_version = 3;
+  string mac_oui = 4;
+  repeated Protocol observed_protocols = 5;
+  string hostname = 6;
+}
+
+message AnomalyFlag {
+  string rule_id = 1;
+  string description = 2;
+  Severity severity = 3;
+  string mitre_technique = 4;
+}
