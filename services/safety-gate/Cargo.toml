@@ -1,0 +1,39 @@
+[package]
+name = "orhashield-safety-gate"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+description = "OrHaShield deterministic OT action safety gate — Rust + OPA/Rego"
+
+[[bin]]
+name = "safety-gate"
+path = "src/main.rs"
+
+[dependencies]
+tokio = { version = "1.42", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+async-nats = "0.37"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+anyhow = "1.0"
+thiserror = "2.0"
+uuid = { version = "1.11", features = ["v7", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+# Pure-Rust Rego evaluator — enables embedded policy evaluation without OPA binary.
+# Critical for air-gap deployments.
+regorus = "0.2"
+# Prometheus metrics
+prometheus = { version = "0.13", features = ["process"] }
+# Database for WORM audit writes
+sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-native-tls", "uuid", "chrono"] }
+
+[dev-dependencies]
+proptest = "1.6"
+tokio-test = "0.4"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
