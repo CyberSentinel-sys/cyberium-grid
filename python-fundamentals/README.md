@@ -56,8 +56,10 @@ Your job is to read the same code — understand what it does, trace what it pro
 | MISSION | OBJECTIVE |
 |:-------:|-----------|
 | `M-01` | What is the name of the Python built-in function used to convert each integer in the list into a character? |
-| `M-02` | How many segments does the final output string contain when split by the `_` character? |
-| `M-03` | Submit the flag — `CTF{...}` |
+| `M-02` | What character does the integer `95` in the list convert to? |
+| `M-03` | What Python string method is used to combine all the characters into a single string? |
+| `M-04` | How many segments does the final output string contain when split by the `_` character? |
+| `M-05` | Submit the flag — `CTF{...}` |
 
 ---
 
